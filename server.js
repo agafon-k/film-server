@@ -57,7 +57,7 @@ app.get('/', function (req, res) {
 
 app.put('/', function (req, res) {
     console.log(req.body);
-    var sql, sql2;
+    var sql;
     var id = req.body.id;
     var newPosition = req.body.newPosition;
     var oldPosition = req.body.oldPosition;
@@ -106,7 +106,7 @@ app.put('/save/film/:id', function (req, res) {
 });
 
 
-app.post('/save*', function (req, res, next) {
+app.post('/save', function (req, res, next) {
 
     console.log('SAVED');
     console.log(req.body);
@@ -118,9 +118,12 @@ app.post('/save*', function (req, res, next) {
         rating: req.body.rating,
         comment: req.body.comment
     };
-    var sql = "INSERT INTO filmsTable SET ?";
-
-    connection.query(sql, data, function (err, result) {
+    var sql = "INSERT INTO filmsTable ( title, imdbId, releaseCountry, releaseYear, rating, comment, byOrder) " +
+        "SELECT '" + data.title + "', '" + data.imdbId + "', '" +
+        req.body.releaseCountry + "', '" + req.body.releaseYear + "', '" + req.body.rating + "', '" +
+        req.body.comment + "', MAX(byOrder) + 1 from filmsTable";
+    connection.query(sql, function (err, result) {
+        console.log(sql);
         if (err) throw err;
         console.log("1 record inserted");
     });
