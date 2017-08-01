@@ -102,13 +102,13 @@ app.put('/save/film/:id', function (req, res) {
     connection.query(sql, [data, id], function (err, result) {
         if (err) throw err;
         console.log("1 record updated");
+        res.send(result);
     });
 });
 
 
-app.post('/save', function (req, res, next) {
+app.post('/film', function (req, res) {
 
-    console.log('SAVED');
     console.log(req.body);
     var data = {
         title: req.body.title,
@@ -123,14 +123,13 @@ app.post('/save', function (req, res, next) {
         req.body.releaseCountry + "', '" + req.body.releaseYear + "', '" + req.body.rating + "', '" +
         req.body.comment + "', MAX(byOrder) + 1 from filmsTable";
     connection.query(sql, function (err, result) {
-        console.log(sql);
         if (err) throw err;
-        console.log("1 record inserted");
+        console.log(result);
+        res.send(result)
     });
-    next();
 });
 
-app.delete('/film/:id', function (req, res, next) {
+app.delete('/film/:id', function (req, res) {
     console.log("CALLED");
     console.log(req.params.id);
 
@@ -139,8 +138,8 @@ app.delete('/film/:id', function (req, res, next) {
     connection.query(sql, function (err, result) {
         if (err) throw err;
         console.log("1 record was deleted");
+        res.send(result);
     });
-    next();
 });
 
 
